@@ -86,7 +86,7 @@ Registros com vereditos ambíguos ou sem classificação clara foram **descartad
 
 ---
 
-## 📊 Métricas de Avaliação
+##  Métricas de Avaliação
 
 > _A ser preenchido._
 
