@@ -72,7 +72,7 @@ Registros com vereditos ambíguos ou sem classificação clara foram **descartad
 | Fake  | 379 | 99,2% |
 | True  | 3   | 0,8%  |
 
-> ⚠️ **Sobre o desbalanceamento:** A proporção reflete a realidade das fontes — agências de fact-checking existem predominantemente para desmentir fake news, resultando em poucos registros com veredito verdadeiro.
+> ⚠️ **Sobre o desbalanceamento:** A proporção reflete a realidade das fontes - agências de fact-checking existem predominantemente para desmentir fake news, resultando em poucos registros com veredito verdadeiro.
 
 ##  Algoritmo Utilizado
 
