@@ -20,7 +20,7 @@ for keyword in KEYWORDS:
         fact_check = FactCheckLib(
             query=keyword,
             language=None,
-            num_results=100,
+            num_results=200,
             csv_filename=temp_file
         )
         fact_check.process()
