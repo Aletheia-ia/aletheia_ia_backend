@@ -28,36 +28,36 @@ O dataset foi construído a partir de duas fontes complementares:
 
 **1. Google Fact Check Explorer** via [GONZOsint/factcheckexplorer](https://github.com/GONZOsint/factcheckexplorer), que agrega checagens de fatos realizadas por agências como Agência Lupa, AosFatos e G1 Fato ou Fake. Essa fonte originou os registros classificados como `Fake`.
 
-**2. Fake.br-Corpus** via [roneysco/Fake.br-Corpus](https://github.com/roneysco/Fake.br-Corpus), corpus acadêmico publicado na conferência PROPOR 2018, composto por notícias verdadeiras e falsas em português brasileiro. Essa fonte originou os registros classificados como `True`.
+**2. NewsAPI** via [newsapi.org](https://newsapi.org), que agrega notícias publicadas por portais jornalísticos confiáveis em português. Essa fonte originou os registros classificados como `True`.
 
 ### Palavras-chave utilizadas
 
-As buscas foram realizadas com as seguintes palavras-chave de tema eleitoral:
+As buscas foram realizadas com palavras-chave de tema eleitoral e político:
 
-`eleição` · `Bolsonaro` · `lula` · `pt` · `campanha` · `urna` · `voto` · `fraude`
+`eleição` · `Bolsonaro` · `lula` · `pt` · `campanha` · `fraude` · `STF` · `Sergio Moro` · `pesquisa eleitoral` · `candidato` · `reeleição` · `corrupção` · `Dilma` · `Michelle Bolsonaro` · `Eduardo Bolsonaro` · `Flavio Bolsonaro` · `Ciro Gomes` · `Haddad` · `Temer` · `Gleisi` · `Datafolha` · `golpe` · `censura` · `preso político` · `indiciado` · `delação` · `mensalão` · `propina` · `ministro`
 
 ### Pipeline de coleta
 
 ```
 Fact Check Explorer
-704 registros coletados
+coleta por palavra-chave
  ↓ remoção de duplicatas
-~600 registros únicos
  ↓ filtro de idioma (somente português)
-421 registros em português
  ↓ descarte de vereditos indefinidos
-632 registros Fake
+ ↓ filtro de relevância política
+508 registros Fake
 
 +
 
-Fake.br-Corpus
-3600 notícias verdadeiras disponíveis
- ↓ filtro por palavras-chave eleitorais
-632 registros True selecionados
+NewsAPI
+coleta por palavra-chave
+ ↓ filtro de relevância política
+ ↓ equilibrio por keyword com os Fake
+508 registros True
 
 =
 
-1264 registros no dataset final
+1016 registros no dataset final
 ```
 
 ### Estrutura do dataset
@@ -66,41 +66,40 @@ Fake.br-Corpus
 |--------|-----------|
 | `texto` | A afirmação verificada ou notícia coletada |
 | `label` | Rotulo final: `Fake` ou `True` |
-| `verdict_original` | Veredito original da agência (ex: "Falso", "Enganoso") |
-| `fonte` | Nome da agência ou corpus de origem |
-| `url_original` | Link para a checagem completa |
-| `data_checagem` | Data em que a checagem foi publicada |
+| `verdict_original` | Veredito original da agência ou indicação da fonte |
+| `fonte` | Nome da agência ou portal de origem |
+| `url_original` | Link para a checagem ou notícia completa |
+| `data_checagem` | Data de publicação |
 | `tags` | Tags temáticas associadas |
 | `palavra_chave` | Keyword que originou o registro |
 
 ### Criterios de classificação dos rotulos
 
-**Fake** - vereditos que contêm: `falso`, `enganoso`, `distorcido`, `misleading`, `false`, `incorreto`, entre outros.
+**Fake** - vereditos das agências de fact-checking que contêm: `falso`, `enganoso`, `distorcido`, `misleading`, `false`, `incorreto`, entre outros. Registros com vereditos ambíguos foram descartados.
 
-**True** - notícias verdadeiras extraídas do Fake.br-Corpus, corpus validado academicamente.
-
-Registros com vereditos ambíguos ou sem classificação clara foram descartados para garantir a qualidade do treino.
+**True** - notícias publicadas por portais jornalísticos confiáveis coletadas via NewsAPI, filtradas por relevância política.
 
 ### Distribuição do dataset
 
 | Label | Quantidade | Percentual |
 |-------|------------|------------|
-| Fake  | 632        | 50%        |
-| True  | 632        | 50%        |
-| Total | 1264       | 100%       |
+| Fake  | 508        | 50%        |
+| True  | 508        | 50%        |
+| Total | 1016       | 100%       |
 
 ### Como reproduzir a coleta
 
 ```bash
 # Instalar dependências
 pip install git+https://github.com/GONZOsint/factcheckexplorer.git
-pip install pandas langdetect requests
+pip install pandas langdetect requests python-dotenv
 
-# Coletar os Fake via Fact Check Explorer
-python dataset/consultar_fact_check.py
+# Configurar a API key da NewsAPI
+# Crie um arquivo .env na pasta dataset/ com o conteúdo:
+# NEWSAPI_KEY=sua_chave_aqui
 
-# Coletar e adicionar os True via Fake.br-Corpus
-python dataset/consultar_true.py
+# Rodar o pipeline completo
+python dataset/gerar_dataset.py
 ```
 
 ---
