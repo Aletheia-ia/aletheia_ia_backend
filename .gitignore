@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+
+# Envs
+.venv/
+venv/
+ENV/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Model artifacts
+projeto_ml/model/
+projeto_ml/outputs/
+*.pt
+*.bin
+*.ckpt
+*.safetensors
+
+# Large datasets (root dataset folder)
+dataset/*.csv
+
+# Allow the small sample CSV in the ML project
+!projeto_ml/dataset/treino.csv
