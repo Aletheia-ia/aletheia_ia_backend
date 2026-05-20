@@ -106,16 +106,118 @@ python dataset/gerar_dataset.py
 
 ## Algoritmo Utilizado
 
-> A ser preenchido.
+O projeto utiliza o **BERTimbau** (`neuralmind/bert-base-portuguese-cased`), um modelo de linguagem pré-treinado em português brasileiro, adaptado para classificar textos como `FALSO` (0) ou `VERDADEIRO` (1).
+
+O BERTimbau foi escolhido por entender o contexto completo de uma frase, e não apenas palavra por palavra, o que ajuda a identificar desinformação eleitoral que costuma imitar a linguagem jornalística.
 
 ---
 
 ## Como Foi Realizado o Treinamento
 
-> A ser preenchido.
+```bash
+python train.py --data dataset/treino.csv
+```
+
+Parâmetros principais (com padrão definido no código):
+
+| Parâmetro | Padrão | Descrição |
+|-----------|--------|-----------|
+| `--epochs` | 3 | Número de rodadas de treinamento |
+| `--batch_size` | 8 | Quantidade de textos processados por vez |
+| `--learning_rate` | 2e-5 | Velocidade de aprendizado do modelo |
+| `--weight_decay` | 0.01 | Penalização para evitar overfitting |
+| `--max_length` | 128 | Limite de tokens por texto |
+| `--patience` | 2 | Rodadas sem melhora antes de parar o treino |
+| `--dropout` | 0.3 | Taxa de desativação aleatória de neurônios |
+| `--seed` | 42 | Semente para resultados reproduzíveis |
+| `--no_class_weights` | desativado | Desativa o balanceamento por classe |
+
+O que o script faz durante o treinamento:
+
+- Limpa os textos removendo URLs, emojis e espaços desnecessários
+- Divide o dataset em 70% para treino, 15% para validação e 15% para teste
+- Treina o modelo e acompanha o desempenho a cada rodada
+- Para automaticamente se o modelo parar de melhorar
+- Salva o melhor resultado obtido em `outputs/best_model.pt`
+- Ao final, salva o modelo pronto para uso em `model/`
 
 ---
 
 ## Metricas de Avaliacao
 
-> A ser preenchido.
+Ao final do treinamento, o script exibe os seguintes resultados calculados sobre o conjunto de teste:
+
+| Métrica | Descrição |
+|---------|-----------|
+| **Accuracy** | Percentual geral de classificações corretas |
+| **Precision** | Das classificações positivas, quantas estavam certas |
+| **Recall** | Dos casos positivos reais, quantos foram identificados |
+| **F1-score** | Equilíbrio entre precision e recall |
+| **Matriz de confusão** | Resumo visual de acertos e erros por classe |
+
+Os resultados são exibidos de forma geral e também separados por classe (`FALSO` e `VERDADEIRO`).
+
+---
+
+## Como Usar
+
+### 1. Instalação
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Treinamento
+
+Antes de qualquer coisa, o modelo precisa ser treinado com o dataset:
+
+```bash
+python train.py --data dataset/treino.csv
+```
+
+### 3. Classificar um texto
+
+Para classificar uma única afirmação diretamente pelo terminal:
+
+```bash
+python predict.py --text "As urnas foram fraudadas"
+```
+
+Para classificar vários textos em sequência sem recarregar o modelo a cada vez:
+
+```bash
+python predict.py --interactive
+```
+
+### 4. Feedback interativo
+
+Para testar o modelo e corrigir erros manualmente, um texto por vez:
+
+```bash
+cd projeto_ml
+python interactive_feedback.py
+```
+
+O script pede o texto, solicita o label correto (`0` para FALSO, `1` para VERDADEIRO), exibe a predição do modelo e salva o exemplo no dataset automaticamente caso o modelo tenha errado. Digite `sair` para encerrar e ver o resumo da sessão.
+
+### 5. Re-treinar após feedback
+
+Após qualquer sessão de feedback, re-treine o modelo para incorporar os novos exemplos:
+
+```bash
+cd projeto_ml
+python train.py --data dataset/treino.csv
+```
+
+---
+
+## Saidas
+
+- Modelo e tokenizer finais: `model/`
+- Melhor checkpoint de treino: `outputs/best_model.pt`
+
+---
+
+## GPU
+
+O sistema detecta CUDA automaticamente e usa GPU se disponível.

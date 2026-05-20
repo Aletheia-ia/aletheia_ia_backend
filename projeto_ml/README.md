@@ -77,13 +77,36 @@ Ajuste de limiar para classificar como verdadeiro (ex: 0.60):
 python predict.py --text "..." --threshold 0.60
 ```
 
-GPU com float16 (mais rapido):
+## Feedback manual
+
+Se o modelo errar, você pode auditá-lo manualmente com o script interativo:
 
 ```bash
-python predict.py --interactive --fp16
+python interactive_feedback.py
 ```
 
-Saida esperada:
+**Fluxo:**
+1. Digite uma notícia/afirmação
+2. Informe o label correto: `0` (falso) ou `1` (verdadeiro)
+3. O modelo fará uma predição e exibirá a confiança
+4. Se o modelo errar, o exemplo é **salvo automaticamente** no dataset
+5. Digite `sair` para encerrar
+
+**Resumo ao final:**
+- Total de textos avaliados
+- Acertos e erros (com percentual)
+- Lista de todos os erros do modelo
+- Quantidade de novos exemplos salvos
+
+**Re-treinar com feedback:**
+
+```bash
+python train.py --data dataset/treino.csv
+```
+
+Este script mantém o modelo carregado para múltiplas avaliações consecutivas (mais rápido).
+
+GPU com float16 (mais rapido):
 
 ```
 Texto:
