@@ -110,7 +110,7 @@ def tokenize_dataset(dataset, tokenizer, max_length: int):
         )
 
     tokenized = dataset.map(tokenize_batch, batched=True, remove_columns=["texto"])
-    tokenized.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
+    tokenized.set_format(type="torch", columns=["input_ids", "attention_mask", "token_type_ids", "labels"])
     return tokenized
 
 
