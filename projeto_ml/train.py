@@ -276,8 +276,9 @@ def main():
         model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay
     )
     total_steps = len(train_loader) * args.epochs
+    warmup_steps = int(0.1 * total_steps)
     scheduler = get_linear_schedule_with_warmup(
-        optimizer, num_warmup_steps=0, num_training_steps=total_steps
+        optimizer, num_warmup_steps=warmup_steps, num_training_steps=total_steps
     )
 
     best_val_loss = float("inf")
