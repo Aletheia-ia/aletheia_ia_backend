@@ -149,11 +149,14 @@ def main():
         return
 
     if args.interactive:
-        print("\nDigite um texto por linha. Para sair, deixe em branco.")
+        print("\nModo interativo. Digite 'sair' para encerrar.")
         while True:
             user_text = input("Texto: ").strip()
-            if not user_text:
+            if user_text.lower() == "sair":
                 break
+            if not user_text:
+                print("  ⚠ Texto não pode estar vazio.")
+                continue
             process_text(user_text)
     else:
         user_text = input("Texto: ").strip()

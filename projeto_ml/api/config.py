@@ -11,5 +11,7 @@ DEFAULT_THRESHOLD = float(os.getenv("THRESHOLD", "0.5"))
 HOST = os.getenv("API_HOST", "0.0.0.0")
 PORT = int(os.getenv("API_PORT", "8000"))
 
-# Em produção, substitua "*" pelo domínio do frontend
-CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*").split(",")
+# Em produção, defina CORS_ORIGINS com o domínio real do frontend via variável de ambiente.
+# Ex: CORS_ORIGINS=https://meu-frontend.com
+_default_origins = "http://localhost:3000,http://localhost:5173"
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", _default_origins).split(",")
