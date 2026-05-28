@@ -80,8 +80,6 @@ def process_single_text(model, tokenizer, device, session_stats: dict) -> bool:
             model, tokenizer, cleaned_text, device, MAX_LENGTH, THRESHOLD
         )
         
-        # Converte label numérico para string
-        pred_label_str = format_label(int(pred_label == "VERDADEIRO"))
         correct_label_str = format_label(correct_label)
         
         # Exibe resultado da predição
@@ -91,7 +89,7 @@ def process_single_text(model, tokenizer, device, session_stats: dict) -> bool:
         print(f"   (FALSO: {prob_fake:.1f}% | VERDADEIRO: {prob_true:.1f}%)")
         
         # Verifica se acertou
-        model_was_correct = (pred_label_str == correct_label_str)
+        model_was_correct = (pred_label == correct_label_str)
         if model_was_correct:
             print("   Acertou!")
             session_stats["acertos"] += 1
@@ -101,7 +99,7 @@ def process_single_text(model, tokenizer, device, session_stats: dict) -> bool:
             session_stats["erros_detalhes"].append({
                 "texto": cleaned_text[:80],
                 "correto": correct_label_str,
-                "predito": pred_label_str,
+                "predito": pred_label,
             })
             
             # Salva no dataset apenas se errou
