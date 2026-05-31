@@ -1,10 +1,11 @@
 import os
 
+from lib.config import MODEL_DIR
+
 API_TITLE = "Aletheia IA API"
 API_DESCRIPTION = "Classificador de fake news eleitorais em português"
 API_VERSION = "1.0.0"
 
-MODEL_DIR = os.getenv("MODEL_DIR", "model")
 MAX_LENGTH = int(os.getenv("MAX_LENGTH", "128"))
 DEFAULT_THRESHOLD = float(os.getenv("THRESHOLD", "0.5"))
 

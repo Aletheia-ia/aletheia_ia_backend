@@ -1,17 +1,21 @@
 # Python
-__pycache__/
 *.py[cod]
-*.pyo
 *.pyd
 *.so
 *.egg-info/
 .eggs/
 
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+
 # Envs
-.venv/
-venv/
-ENV/
 .env
+.venv/
+ENV/
+env/
+venv/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -20,8 +24,7 @@ ENV/
 *.log
 
 # Model artifacts
-projeto_ml/model/
-projeto_ml/outputs/
+model/
 *.pt
 *.bin
 *.ckpt
@@ -32,3 +35,11 @@ dataset/*.csv
 
 # Allow the small sample CSV in the ML project
 !projeto_ml/dataset/treino.csv
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/

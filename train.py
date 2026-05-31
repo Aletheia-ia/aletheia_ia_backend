@@ -1,29 +1,36 @@
 import argparse
+import numpy as np
 import os
+import pandas as pd
 import random
 import re
-
-import numpy as np
-import pandas as pd
 import torch
-import torch.nn.functional as F
+
 from datasets import Dataset
+from sklearn.model_selection import train_test_split
+from torch.nn import functional as F
+from torch.optim import AdamW
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
+
+from lib.config import (
+    DATASET_PATH,
+    MODEL_DIR
+)
+
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
     confusion_matrix,
     precision_recall_fscore_support,
 )
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
+
 from transformers import (
     AutoConfig,
     AutoModelForSequenceClassification,
     AutoTokenizer,
     get_linear_schedule_with_warmup,
 )
-from torch.optim import AdamW
 
 MODEL_NAME = "neuralmind/bert-base-portuguese-cased"
 
@@ -189,10 +196,10 @@ def predict_labels(model, dataloader, device):
 
 def main():
     parser = argparse.ArgumentParser(description="Treinamento BERTimbau para fake news")
-    parser.add_argument("--data", default="dataset/treino.csv")
+    parser.add_argument("--data", default=DATASET_PATH)
     parser.add_argument("--model_name", default=MODEL_NAME)
-    parser.add_argument("--output_dir", default="model")
-    parser.add_argument("--outputs_dir", default="outputs")
+    parser.add_argument("--output_dir", default=MODEL_DIR)
+    parser.add_argument("--outputs_dir", default=MODEL_DIR)
     parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--learning_rate", type=float, default=2e-5)
@@ -283,7 +290,7 @@ def main():
 
     best_val_loss = float("inf")
     patience_counter = 0
-    best_model_path = os.path.join(args.outputs_dir, "best_model.pt")
+    best_model_path = os.path.join(args.outputs_dir, "model.pt")
 
     for epoch in range(1, args.epochs + 1):
         print("\n" + "-" * 40)

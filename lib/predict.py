@@ -1,12 +1,11 @@
 import argparse
 import os
 import re
-
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-import torch.nn.functional as F
 
-MODEL_DIR = "model"
+from lib.config import MODEL_DIR
+from torch.nn import functional as F
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 URL_PATTERN = re.compile(r"https?://\S+|www\.\S+", flags=re.IGNORECASE)
 EMOJI_PATTERN = re.compile(

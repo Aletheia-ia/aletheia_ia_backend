@@ -2,13 +2,14 @@
 import os
 import pandas as pd
 import torch
-import torch.nn.functional as F
-from tqdm.auto import tqdm
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from transformers import AutoTokenizer
-from predict import clean_text, load_model, run_inference
 
-MODEL_DIR = "model"
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from tqdm.auto import tqdm
+from transformers import AutoTokenizer
+
+from lib.config import MODEL_DIR
+from lib.predict import clean_text, load_model, run_inference
+
 BATCH_FILE = "dataset/feedback_batch.csv"
 MAX_LENGTH = 128
 THRESHOLD = 0.5
@@ -20,7 +21,7 @@ def main():
         exit(1)
 
     print("\n" + "="*60)
-    print("TESTE EM LOTE - feedback_batch.csv")
+    print(f"TESTE EM LOTE - {BATCH_FILE}")
     print("="*60)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

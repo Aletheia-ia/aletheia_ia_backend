@@ -9,19 +9,14 @@ Reutiliza funções do predict.py para evitar duplicação de código.
 
 import csv
 import os
-
 import torch
+
+from lib.config import DATASET_PATH, MODEL_DIR
+from lib.predict import clean_text, load_model, run_inference
 from transformers import AutoTokenizer
 
-# Importar funções reutilizáveis do predict.py
-from predict import clean_text, load_model, run_inference
-
-# Configurações fixas do projeto
-MODEL_DIR = "model"
-DATASET_PATH = "dataset/treino.csv"
 MAX_LENGTH = 128
 THRESHOLD = 0.5
-
 
 def append_to_dataset(cleaned_text: str, label: int) -> None:
     """Salva um exemplo no arquivo CSV do dataset de treino."""
@@ -140,7 +135,7 @@ def print_session_summary(stats: dict) -> None:
     print("\n" + "=" * 70)
     if erros > 0:
         print("Para re-treinar o modelo com os novos exemplos, execute:")
-        print("  python train.py --data dataset/treino.csv")
+        print(f"  python train.py --data {DATASET_PATH}")
     print("=" * 70 + "\n")
 
 
@@ -156,7 +151,7 @@ def main():
     
     if not os.path.isdir(MODEL_DIR):
         print(f"\nErro: Modelo não encontrado em '{MODEL_DIR}'")
-        print("Execute: python train.py --data dataset/treino.csv")
+        print(f"Execute: python train.py --data {DATASET_PATH}")
         return
     
     # Carrega modelo e tokenizer

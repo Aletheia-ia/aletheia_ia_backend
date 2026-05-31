@@ -1,10 +1,13 @@
+import os
 import pandas as pd
+import re
 import requests
 import time
-import re
-from langdetect import detect
+
 from dotenv import load_dotenv
-import os
+from langdetect import detect
+
+from lib.config import DATASET_RAW_PATH
 
 load_dotenv()
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "")
@@ -297,13 +300,13 @@ def equilibrar_e_salvar(df_fake, df_true):
     df_final   = pd.concat([df_fake_eq, df_true_eq], ignore_index=True)
     df_final.drop_duplicates(subset=["texto"], inplace=True)
     df_final = df_final.sample(frac=1, random_state=42).reset_index(drop=True)
-    df_final.to_csv("dataset_raw.csv", index=False, encoding="utf-8-sig")
+    df_final.to_csv(DATASET_RAW_PATH, index=False, encoding="utf-8-sig")
 
     total = len(df_final)
     n_f   = (df_final["label"] == "Fake").sum()
     n_t   = (df_final["label"] == "True").sum()
 
-    print(f"\nDataset salvo: dataset_raw.csv")
+    print(f"\nDataset salvo: {DATASET_RAW_PATH}")
     print(f"  Total: {total} | Fake: {n_f} ({n_f/total*100:.1f}%) | True: {n_t} ({n_t/total*100:.1f}%)")
 
 
