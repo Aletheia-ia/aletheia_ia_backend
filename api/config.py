@@ -1,7 +1,5 @@
 import os
 
-from lib.config import MODEL_DIR
-
 API_TITLE = "Aletheia IA API"
 API_DESCRIPTION = "Classificador de fake news eleitorais em português"
 API_VERSION = "1.0.0"
