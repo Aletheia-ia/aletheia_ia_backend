@@ -17,14 +17,21 @@ class ModelService:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def load(self) -> None:
-        if not os.path.isdir(MODEL_DIR):
+        model_source = MODEL_DIR
+        if os.path.isdir(model_source):
+            pass
+        elif "/" in model_source:
+            # Repositório no Hugging Face Hub (ex.: usuario/aletheia-bert)
+            pass
+        else:
             raise FileNotFoundError(
-                f"Modelo não encontrado em '{MODEL_DIR}'. Execute: python train.py --data {DATASET_PATH}"
+                f"Modelo não encontrado em '{model_source}'. "
+                f"Treine localmente (python train.py --data {DATASET_PATH}) "
+                "ou defina HF_MODEL_ID com o repositório no Hub."
             )
 
-        # Hugging Face artefacts
-        self.tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, use_fast=True)
-        self.model = load_model(MODEL_DIR, torch_dtype=None)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_source, use_fast=True)
+        self.model = load_model(model_source, torch_dtype=None)
         self.model.to(self.device)
         self.model.eval()
 

@@ -66,14 +66,39 @@ def clean_text(text: str) -> str:
     return text
 
 
+def normalize_labels(series: pd.Series) -> pd.Series:
+    mapping = {
+        "fake": 0,
+        "falso": 0,
+        "false": 0,
+        "0": 0,
+        0: 0,
+        "true": 1,
+        "verdadeiro": 1,
+        "1": 1,
+        1: 1,
+    }
+    normalized = series.map(lambda value: mapping.get(str(value).strip().lower(), value))
+    if normalized.isna().any():
+        invalid = series[normalized.isna()].unique().tolist()
+        raise ValueError(f"Labels invalidos encontrados: {invalid}")
+    return normalized.astype(int)
+
+
 def load_dataframe(csv_path: str) -> pd.DataFrame:
+    if not os.path.isfile(csv_path):
+        raise FileNotFoundError(
+            f"Arquivo de dataset nao encontrado: '{csv_path}'. "
+            "Use dataset/treino.csv ou gere com: python train.py --prepare-data"
+        )
+
     df = pd.read_csv(csv_path)
     if "texto" not in df.columns or "label" not in df.columns:
         raise ValueError("CSV precisa ter as colunas: texto,label")
     df = df[["texto", "label"]].dropna()
     df["texto"] = df["texto"].astype(str).apply(clean_text)
     df = df[df["texto"].str.len() > 0]
-    df["label"] = df["label"].astype(int)
+    df["label"] = normalize_labels(df["label"])
     return df
 
 
