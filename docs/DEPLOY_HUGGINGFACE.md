@@ -148,7 +148,54 @@ const response = await fetch(`${API_URL}/predict`, {
 
 | Problema | Solução |
 |----------|---------|
+| **404 em `/docs`, `/health` ou `/`** | Veja seção abaixo — o container provavelmente não subiu |
 | `model_loaded: false` | Confira `HF_MODEL_ID` e se o modelo está público no Hub |
 | Erro de CORS no frontend | Adicione a URL exata do frontend em `CORS_ORIGINS` |
 | Build falha por memória | Use `requirements-spaces.txt` (não o `requirements.txt` completo) |
 | Space não sobe | Verifique o bloco YAML no topo do `README.md` com `sdk: docker` |
+
+---
+
+## Erro 404 no deploy (página do Hugging Face)
+
+Se aparecer **"404 — Sorry, we can't find the page"** com o emoji do Hugging Face,
+a API **não está rodando** no Space. Não é problema do Swagger em si.
+
+### Checklist de correção
+
+1. **Confirme o Space** em `https://huggingface.co/spaces/Sairth/aletheia-api`
+2. Em **Settings → General**:
+   - **SDK:** `Docker`
+   - **App port:** `7860`
+3. Em **Settings → Variables**, adicione:
+   - `HF_MODEL_ID` = `Sairth/aletheia-bert`
+4. Faça **push** do `README.md` com o bloco YAML (`sdk: docker`, `app_port: 7860`)
+5. Em **Settings**, clique em **Factory rebuild**
+6. Abra a aba **Logs** e aguarde aparecer:
+   ```
+   Application startup complete
+   Uvicorn running on http://0.0.0.0:7860
+   ```
+
+### URLs corretas após o Space subir
+
+| Recurso | URL |
+|---------|-----|
+| Swagger | `https://sairth-aletheia-api.hf.space/docs` |
+| Health | `https://sairth-aletheia-api.hf.space/health` |
+| Raiz | `https://sairth-aletheia-api.hf.space/` |
+
+### Se o Space ainda não existir
+
+Crie pelo terminal:
+
+```bash
+hf repos create Sairth/aletheia-api --type space --space-sdk docker --flavor cpu-basic \
+  -e HF_MODEL_ID=Sairth/aletheia-bert
+
+# Envie os arquivos do projeto para o Space
+hf upload Sairth/aletheia-api . . --repo-type space \
+  --include "Dockerfile" --include "requirements-spaces.txt" --include "api/*" --include "lib/*" --include "README.md"
+```
+
+Ou conecte o repositório GitHub em **Settings → Repository**.

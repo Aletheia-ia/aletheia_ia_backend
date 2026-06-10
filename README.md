@@ -1,3 +1,14 @@
+---
+title: Aletheia IA API
+emoji: 🔍
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # Aletheia IA - Backend (Classificador de Fake News)
 
 Repositório do classificador de fake news com aprendizado supervisionado, desenvolvido para as disciplinas de Machine Learning e Inteligência Artificial.
